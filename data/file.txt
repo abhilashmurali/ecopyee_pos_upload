@@ -1,0 +1,32 @@
+const AWS = require('aws-sdk');
+const fs = require('fs');
+const path = require('path');
+
+
+//configuring the AWS environment
+AWS.config.update({
+    accessKeyId: "AKIAI3R26QK53DCAHYXQ",
+    secretAccessKey: "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"
+  });
+
+var s3 = new AWS.S3();
+var filePath = "./data/Logo.pdf";
+
+//configuring parameters
+var params = {
+  Bucket: 'ecopyee-pos-pdf-uploads',
+  Body : fs.createReadStream(filePath),
+  Key : "folder/"+Date.now()+"_"+path.basename(filePath)
+};
+
+s3.upload(params, function (err, data) {
+  //handle error
+  if (err) {
+    console.log("Error", err);
+  }
+
+  //success
+  if (data) {
+    console.log("Uploaded in:", data.Location);
+  }
+});
